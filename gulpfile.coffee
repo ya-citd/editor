@@ -32,7 +32,7 @@ config =
 
     output:
       path: path.join __dirname, config.paths.tmp
-      filename: "bundle.js"
+      filename: "[name].js"
 
     resolve:
       extensions: ["", ".js", ".coffee", ".scss", ".css", ".ttf"]
@@ -53,11 +53,10 @@ config =
     development:
       devtool: "eval"
       debug: true
-      entry: [
-        "webpack-dev-server/client?http://0.0.0.0:#{config.serverPort}"
-        "webpack/hot/only-dev-server"
-        "./#{config.paths.scripts}/app"
-      ]
+      entry: {
+        editor: "./#{config.paths.scripts}/editor",
+        preview: "./#{config.paths.scripts}/preview"
+      }
 
       plugins: [
         new webpack.HotModuleReplacementPlugin
@@ -65,12 +64,13 @@ config =
       ]
 
     distribute:
-      entry: [
-        "./#{config.paths.scripts}/app"
-      ]
+      entry: {
+        editor: "./#{config.paths.scripts}/editor",
+        preview: "./#{config.paths.scripts}/preview"
+      }
 
       plugins: [
-        new webpack.optimize.DedupePlugin()
+        new webpack.optimize.DedupePlugin(),
         new webpack.optimize.UglifyJsPlugin(
           compressor: { warnings: false }
         )
@@ -92,12 +92,15 @@ gulp
       .src path.join(config.paths.assets, "**")
       .pipe gulp.dest("#{config.paths.tmp}/assets")
 
-
-    instructions = gulp
-      .src path.join(config.paths.app, "index.html")
+    editor = gulp
+      .src path.join(config.paths.app, "editor.html")
       .pipe gulp.dest(config.paths.tmp)
 
-    merge assets, instructions
+    preview = gulp
+      .src path.join(config.paths.app, "preview.html")
+      .pipe gulp.dest(config.paths.tmp)
+
+    merge assets, editor, preview
 
   .task "copy-page-files", ->
     gulp
@@ -126,14 +129,20 @@ gulp
   .task "serve", ["copy-assets", "webpack-dev-server"], ->
     gulp.watch ["app/assets/**"], ["copy-assets"]
 
-  .task "inline", ->
+  .task "editor", ->
     gulp
-      .src "#{config.paths.tmp}/index.html"
+      .src "#{config.paths.tmp}/editor.html"
       .pipe $.inlineSource()
-      .pipe rename(basename: "editor")
+      .pipe rename(basename: "index")
+      .pipe gulp.dest("#{config.paths.dist}")
+
+  .task "preview", ->
+    gulp
+      .src "#{config.paths.tmp}/preview.html"
+      .pipe $.inlineSource()
       .pipe gulp.dest("#{config.paths.dist}")
 
   .task "dist", ->
-    runSequence "copy-assets", "build", "inline", "copy-page-files"
+    runSequence "copy-assets", "build", "editor", "preview", "copy-page-files"
 
   .task "default", ["serve"]

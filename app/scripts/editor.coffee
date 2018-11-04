@@ -1,4 +1,4 @@
-require "../styles/index"
+require "../styles/editor"
 
 _ = require "underscore"
 $ = require "jquery"
@@ -8,7 +8,7 @@ require "brace/mode/html"
 require "brace/theme/vibrant_ink"
 require "brace/ext/searchbox"
 
-class App
+class Editor
   POWER_MODE_ACTIVATION_THRESHOLD: 200
   STREAK_TIMEOUT: 10 * 1000
 
@@ -273,4 +273,4 @@ class App
     _.defer =>
       @throttledSpawnParticles(token.type) if token
 
-$ -> new App
+$ -> new Editor
