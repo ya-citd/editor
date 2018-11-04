@@ -17,7 +17,7 @@
   </div>
   <div class="reference-screenshot-container">
     <span>Reference</span>
-    <div class="reference-screenshot" style="background-image:url(assets/page.png);"></div>
+    <div class="reference-screenshot"></div>
   </div>
 
   <div class="name-tag">
@@ -29,7 +29,7 @@
   </div>
 
   <div class="instructions-container">
-    <iframe class="instructions" src="assets/instructions.html"></iframe>
+    <iframe class="instructions"></iframe>
   </div>
 
   <div class="button-bar">
@@ -37,6 +37,18 @@
     <button class="instructions-button">Instructions</button>
   </div>
 
-  <iframe class="result" src="assets/result.html" frameborder="0"><iframe>
+  <script>
+    function startRound(round) {
+      if (!round) round = 0;
+
+      localStorage["name"] = "";
+      localStorage["content"] = "";
+      localStorage["round"] = round;
+
+      location.reload();
+
+      return "Have fun!";
+    }
+  </script>
 </body>
 </html>

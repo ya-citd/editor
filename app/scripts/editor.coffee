@@ -52,6 +52,7 @@ class Editor
     @$streakCounter = $ ".streak-container .counter"
     @$streakBar = $ ".streak-container .bar"
     @$exclamations = $ ".streak-container .exclamations"
+    @$layout = $ ".reference-screenshot"
     @$reference = $ ".reference-screenshot-container"
     @$nameTag = $ ".name-tag"
     @$result = $ ".result"
@@ -59,6 +60,7 @@ class Editor
     @canvas = @setupCanvas()
     @canvasContext = @canvas.getContext "2d"
     @$finish = $ ".finish-button"
+    @$instructions = $ ".instructions"
 
     @$body = $ "body"
 
@@ -69,6 +71,7 @@ class Editor
 
     @editor = @setupAce()
     @loadContent()
+    @getRoundContent()
     @editor.focus()
 
     @editor.getSession().on "change", @onChange
@@ -102,6 +105,12 @@ class Editor
     canvas.width = window.innerWidth
     canvas.height = window.innerHeight
     canvas
+
+  getRoundContent: ->
+    round = localStorage["round"] || 0
+
+    @$layout.css("background-image", "url(assets/rounds/" + round + ".png)")
+    @$instructions.attr("src", "assets/instructions/" + round + ".html")
 
   getName: (forceUpdate) ->
     name = (not forceUpdate and localStorage["name"]) || prompt "What's your name?"
@@ -253,7 +262,7 @@ class Editor
     "
 
     if confirm?.toLowerCase() is "yes"
-      @$result[0].contentWindow.postMessage(@editor.getValue(), "*")
+      location.href = "preview.html";
       @$result.show()
 
   onChange: (e) =>
