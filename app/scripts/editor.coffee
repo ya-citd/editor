@@ -1,4 +1,4 @@
-require "../styles/index"
+require "../styles/editor"
 
 _ = require "underscore"
 $ = require "jquery"
