@@ -59,7 +59,6 @@ class Editor
     @$editor = $ "#editor"
     @canvas = @setupCanvas()
     @canvasContext = @canvas.getContext "2d"
-    @$finish = $ ".finish-button"
     @$instructions = $ ".instructions"
 
     @$body = $ "body"
@@ -79,7 +78,6 @@ class Editor
 
     $(".instructions-container, .instructions-button").on "click", @onClickInstructions
     @$reference.on "click", @onClickReference
-    @$finish.on "click", @onClickFinish
     @$nameTag.on "click", => @getName true
 
     @getName()
@@ -254,16 +252,6 @@ class Editor
   onClickReference: =>
     @$reference.toggleClass "active"
     @editor.focus() unless @$reference.hasClass("active")
-
-  onClickFinish: =>
-    confirm = prompt "
-      This will show the results of your code. Doing this before the round is over
-      WILL DISQUALIFY YOU. Are you sure you want to proceed? Type \"yes\" to confirm.
-    "
-
-    if confirm?.toLowerCase() is "yes"
-      location.href = "preview.html";
-      @$result.show()
 
   onChange: (e) =>
     @debouncedSaveContent()

@@ -23,7 +23,7 @@ button {
   background-color: #3A9364;
   color: white;
   font-size: 12px;
-  padding: 10px 15px;
+  padding: 10px 28px;
   box-shadow: none;
   border: none;
   cursor: pointer;
@@ -271,6 +271,7 @@ body.power-mode #editor {
   background: transparentize(#3A9364, 0.25);
   color: white;
   font-size: 56px;
+  pointer-events: none;
 
   &:hover {
     cursor: pointer;
