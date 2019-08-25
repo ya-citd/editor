@@ -68,6 +68,8 @@ class Editor
     @throttledShake = _.throttle @shake, 100, trailing: false
     @throttledSpawnParticles = _.throttle @spawnParticles, 25, trailing: false
 
+    @numsKeyCodes = [48, 49, 50, 51, 52, 53, 54, 55, 56, 57]
+
     @editor = @setupAce()
     @loadContent()
     @getRoundContent()
@@ -75,6 +77,7 @@ class Editor
 
     @editor.getSession().on "change", @onChange
     $(window).on "beforeunload", -> "Hold your horses!"
+    $(window).on "keydown", @onKeyDown
 
     $(".instructions-container, .instructions-button").on "click", @onClickInstructions
     @$reference.on "click", @onClickReference
@@ -269,5 +272,18 @@ class Editor
 
     _.defer =>
       @throttledSpawnParticles(token.type) if token
+
+  onKeyDown: (event) =>
+    {keyCode, altKey, shiftKey} = event
+
+    if altKey and shiftKey and keyCode > 47 and keyCode < 58
+      roundNumber = @numsKeyCodes.indexOf(keyCode)
+
+      if confirm("Do you want to start round " + roundNumber + "?")
+        localStorage["name"] = ""
+        localStorage["content"] = ""
+        localStorage["round"] = roundNumber
+
+        location.reload()
 
 $ -> new Editor
