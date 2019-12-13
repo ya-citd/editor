@@ -47,6 +47,8 @@ class Editor
   particles: []
   particlePointer: 0
   lastDraw: 0
+  name: ""
+  roundNumber: 0
 
   constructor: ->
     @$streakCounter = $ ".streak-container .counter"
@@ -110,12 +112,14 @@ class Editor
   getRoundContent: ->
     round = localStorage["round"] || 0
 
+    @roundNumber = round
     @$layout.css("background-image", "url(assets/rounds/" + round + ".png)")
     @$instructions.attr("src", "assets/instructions/" + round + ".html")
 
   getName: (forceUpdate) ->
     name = (not forceUpdate and localStorage["name"]) || prompt "What's your name?"
     localStorage["name"] = name
+    @name = name
     @$nameTag.text(name) if name
 
   loadContent: ->
@@ -123,7 +127,9 @@ class Editor
     @editor.setValue content, -1
 
   saveContent: =>
-    localStorage["content"] = @editor.getValue()
+    content = @editor.getValue()
+    localStorage["content"] = content
+    localStorage[@name + "-round-" + @roundNumber] = content
 
   onFrame: (time) =>
     @drawParticles time - @lastDraw
